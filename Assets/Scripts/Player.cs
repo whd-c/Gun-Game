@@ -44,10 +44,7 @@ public class Player : MonoBehaviour
         };
         playerCharacter.UpdateInput(characterInput);
         playerCharacter.UpdateBody(deltaTime);
-    }
 
-    void LateUpdate()
-    {
         playerCamera.UpdatePosition(playerCharacter.GetCameraTarget());
     }
 }

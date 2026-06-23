@@ -50,6 +50,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
     [SerializeField] private float gravity = -90f;
 
     [Space]
+    [SerializeField] private float speedNeededToSlide = 10f;
     [SerializeField] private float slideStartSpeed = 25f;
     [SerializeField] private float slideEndSpeed = 15f;
     [SerializeField] private float slideFriction = 0.8f;
@@ -71,7 +72,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
     private Quaternion _requestedRotation;
     private Vector3 _requestedMovement;
     private bool _requestedJump;
-    private bool _requestedSutainedJump;
+    private bool _requestedSustainedJump;
     private bool _requestedCrouch;
     private Collider[] _uncrouchOverlapResults;
     private float _standYOffset;
@@ -100,9 +101,9 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
         //orient the movement to face the same direction as the camera
         _requestedMovement = input.Rotation * _requestedMovement;
 
-        _requestedJump = _requestedJump || input.Jump;
+        _requestedJump = (_requestedJump || input.Jump) && _state.Grounded && _state.Stance is not Stance.Crouch;
 
-        _requestedSutainedJump = input.JumpSustain;
+        _requestedSustainedJump = input.JumpSustain;
 
         _requestedCrouch = input.Crouch switch
         {
@@ -160,7 +161,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
             ) * _requestedMovement.magnitude;
 
             {
-                var isMoving = groundedMovement.sqrMagnitude > 0f;
+                var isMoving = currentVelocity.magnitude >= speedNeededToSlide - Mathf.Epsilon;
                 var isCrouching = _state.Stance is Stance.Crouch;
                 var wasStanding = _lastState.Stance is Stance.Stand;
                 var wasInAir = !_lastState.Grounded;
@@ -246,7 +247,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
             }
             var effectiveGravity = gravity;
             var verticalSpeed = Vector3.Dot(currentVelocity, motor.CharacterUp);
-            if (_requestedSutainedJump && verticalSpeed > 0)
+            if (_requestedSustainedJump && verticalSpeed > 0)
                 effectiveGravity *= jumpSustainGravityMultiplier;
             currentVelocity += motor.CharacterUp * effectiveGravity * deltaTime;
         }
@@ -256,7 +257,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
             _requestedJump = false;
             _requestedCrouch = false;
 
-            motor.ForceUnground(time: 0f);
+            motor.ForceUnground(time: 0.1f);
             var currentVerticalSpeed = Vector3.Dot(currentVelocity, motor.CharacterUp);
             var targetVerticalSpeed = Mathf.Max(currentVerticalSpeed, jumpSpeed);
             currentVelocity += motor.CharacterUp * (targetVerticalSpeed - currentVerticalSpeed);
