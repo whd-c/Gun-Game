@@ -253,7 +253,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 311619721}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 3
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -368,7 +368,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -648,15 +648,17 @@ MonoBehaviour:
   motor: {fileID: 553674721}
   cameraTarget: {fileID: 544142385}
   root: {fileID: 1912520204}
+  holdCrouch: 1
   walkSpeed: 20
   crouchSpeed: 10
-  walkResponse: 25
-  crouchResponse: 25
+  walkResponse: 15
+  crouchResponse: 10
   airSpeed: 15
   airAcceleration: 70
   jumpSpeed: 20
   jumpSustainGravityMultiplier: 0.4
   gravity: -90
+  speedNeededToSlide: 10
   slideStartSpeed: 30
   slideEndSpeed: 15
   slideFriction: 0.8
@@ -664,7 +666,7 @@ MonoBehaviour:
   slideGravity: -90
   standHeight: 2
   crouchHeight: 1
-  crouchHeightResponse: 15
+  crouchHeightResponse: 10
   standCameraTargetHeight: 0.9
   crouchCameraTargetHeight: 0.7
 --- !u!114 &553674721

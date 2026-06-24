@@ -33,14 +33,36 @@ public class Player : MonoBehaviour
         var cameraInput = new CameraInput { Look = input.Look.ReadValue<Vector2>() };
         playerCamera.UpdateRotation(cameraInput);
 
+
         //get character input and update it
+        var crouchState = CrouchInput.None;
+        if (playerCharacter.holdCrouch)
+        {
+            if (input.Crouch.IsPressed())
+            {
+                crouchState = CrouchInput.Hold;
+            }
+            else if (input.Crouch.WasReleasedThisFrame())
+            {
+                crouchState = CrouchInput.UnHold;
+            }
+        }
+        else
+        {
+            if (input.Crouch.WasPressedThisFrame())
+            {
+                crouchState = CrouchInput.Toggle;
+            }
+
+        }
+
         var characterInput = new CharacterInput
         {
             Rotation = playerCamera.transform.rotation,
             Move = input.Move.ReadValue<Vector2>(),
             Jump = input.Jump.WasPressedThisFrame(),
             JumpSustain = input.Jump.IsPressed(),
-            Crouch = input.Crouch.WasPressedThisFrame() ? CrouchInput.Toggle : CrouchInput.None
+            Crouch = crouchState
         };
         playerCharacter.UpdateInput(characterInput);
         playerCharacter.UpdateBody(deltaTime);
