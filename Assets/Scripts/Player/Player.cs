@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerCharacter playerCharacter;
     [SerializeField] private PlayerCamera playerCamera;
     [SerializeField] private CameraSpring cameraSpring;
+    [SerializeField] private CameraLean cameraLean;
 
     private PlayerInputActions _inputActions;
     void Start()
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
         playerCharacter.Initialize();
         playerCamera.Initialize(playerCharacter.GetCameraTarget());
         cameraSpring.Initialize();
+        cameraLean.Initialize();
     }
 
     void OnDestroy()
@@ -69,7 +71,11 @@ public class Player : MonoBehaviour
         playerCharacter.UpdateBody(deltaTime);
 
         var cameraTarget = playerCharacter.GetCameraTarget();
+        var state = playerCharacter.GetState();
+        var isSliding = state.Stance is Stance.Slide;
+
         playerCamera.UpdatePosition(cameraTarget);
         cameraSpring.UpdateSpring(deltaTime, cameraTarget.up);
+        cameraLean.UpdateLean(deltaTime, isSliding, state.Acceleration, cameraTarget.up);
     }
 }

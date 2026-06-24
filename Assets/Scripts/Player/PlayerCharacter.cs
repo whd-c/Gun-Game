@@ -18,6 +18,7 @@ public struct CharacterState
     public bool Grounded;
     public Stance Stance;
     public Vector3 Velocity;
+    public Vector3 Acceleration;
 }
 public struct CharacterInput
 {
@@ -178,6 +179,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {
+        _state.Acceleration = Vector3.zero;
         if (motor.GroundingStatus.IsStableOnGround)
         {
             _timeSinceUngrounded = 0f;
@@ -225,11 +227,13 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
                 var response = _state.Stance is Stance.Stand ? walkResponse : crouchResponse;
 
                 var targetVelocity = groundedMovement * speed;
-                currentVelocity = Vector3.Lerp(
+                var moveVelocity = Vector3.Lerp(
                     a: currentVelocity,
                     b: targetVelocity,
                     t: 1f - Mathf.Exp(-response * deltaTime)
                 );
+                _state.Acceleration = (moveVelocity - currentVelocity) / deltaTime;
+                currentVelocity = moveVelocity;
             }
             else //continue sliding
             {
@@ -246,9 +250,14 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
                 {
                     var originalSpeed = currentVelocity.magnitude;
                     var targetVelocity = groundedMovement * originalSpeed;
-                    var steerForce = deltaTime * slideSteerAcceleration * (targetVelocity - currentVelocity);
-                    currentVelocity += steerForce;
-                    currentVelocity = Vector3.ClampMagnitude(currentVelocity, originalSpeed);
+                    var steerVelocity = currentVelocity;
+                    var steerForce = deltaTime * slideSteerAcceleration * (targetVelocity - steerVelocity);
+
+                    steerVelocity += steerForce;
+                    steerVelocity = Vector3.ClampMagnitude(steerVelocity, originalSpeed);
+
+                    _state.Acceleration = (steerVelocity - currentVelocity) / deltaTime;
+                    currentVelocity = steerVelocity;
                 }
 
                 if (currentVelocity.magnitude < slideEndSpeed)
@@ -373,6 +382,9 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
         _state.Grounded = motor.GroundingStatus.IsStableOnGround;
         _state.Velocity = motor.Velocity;
         _lastState = _tempState;
+
+        var totalAcceleration = (_state.Velocity - _lastState.Velocity) / deltaTime;
+        _state.Acceleration = Vector3.ClampMagnitude(_state.Acceleration, totalAcceleration.magnitude);
     }
 
     public void BeforeCharacterUpdate(float deltaTime)
@@ -410,6 +422,7 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
 
     public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
     {
+        _state.Acceleration = Vector3.ProjectOnPlane(_state.Acceleration, hitNormal);
     }
 
     public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
@@ -417,4 +430,6 @@ public class PlayerCharacter : MonoBehaviour, ICharacterController
     }
 
     public Transform GetCameraTarget() => cameraTarget;
+    public CharacterState GetState() => _state;
+    public CharacterState GetLastState() => _lastState;
 }

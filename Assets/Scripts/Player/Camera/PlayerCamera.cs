@@ -8,6 +8,9 @@ public struct CameraInput
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private float sensitivity = 0.1f;
+
+    [Range(0f, 90f)]
+    [SerializeField] private float clampedPitch = 85f;
     private Vector3 _eulerAngles;
     public void Initialize(Transform target)
     {
@@ -18,6 +21,7 @@ public class PlayerCamera : MonoBehaviour
     public void UpdateRotation(CameraInput input)
     {
         _eulerAngles += new Vector3(-input.Look.y, input.Look.x) * sensitivity;
+        _eulerAngles.x = Mathf.Clamp(_eulerAngles.x, -clampedPitch, clampedPitch);
         transform.eulerAngles = _eulerAngles;
     }
 
