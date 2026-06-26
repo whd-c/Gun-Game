@@ -7,11 +7,24 @@ public struct CameraInput
 
 public class PlayerCamera : MonoBehaviour
 {
-    [SerializeField] private float sensitivity = 0.1f;
+    [SerializeField] private Camera mainCamera;
 
+    [Space]
+    [SerializeField] private float sensitivity = 0.1f;
     [Range(0f, 90f)]
     [SerializeField] private float clampedPitch = 85f;
+    [Range(0f, 180f)]
+
+
+    [Space]
+    [SerializeField] private float minFieldOfView = 60f;
+    [Range(0f, 180f)]
+    [SerializeField] private float maxFieldOfView = 90f;
+
+    [SerializeField] private float velocityPeak = 20f;
+    [SerializeField] private float fieldOfViewResponse = 5f;
     private Vector3 _eulerAngles;
+
     public void Initialize(Transform target)
     {
         transform.position = target.position;
@@ -28,5 +41,13 @@ public class PlayerCamera : MonoBehaviour
     public void UpdatePosition(Transform target)
     {
         transform.position = target.position;
+    }
+
+    public void UpdateCamera(float deltaTime, Vector3 velocity)
+    {
+        var velocityRatio = Mathf.InverseLerp(0, velocityPeak, velocity.magnitude);
+        var targetFieldOfView = Mathf.Lerp(minFieldOfView, maxFieldOfView, velocityRatio);
+
+        mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, targetFieldOfView, 1f - Mathf.Exp(-fieldOfViewResponse * deltaTime));
     }
 }

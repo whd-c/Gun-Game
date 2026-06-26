@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerCamera playerCamera;
     [SerializeField] private CameraSpring cameraSpring;
     [SerializeField] private CameraLean cameraLean;
+    [SerializeField] private CameraVignette cameraVignette;
+
+    [Space]
+    [SerializeField] private Volume volume;
+
 
     [Space]
     [SerializeField] private WeaponSystem weaponSystem;
@@ -27,6 +33,8 @@ public class Player : MonoBehaviour
         cameraSpring.Initialize();
         cameraLean.Initialize();
 
+        cameraVignette.Initialize(volume.profile);
+
         weaponSystem.Initialize();
         weaponHolder.Initialize();
     }
@@ -40,11 +48,6 @@ public class Player : MonoBehaviour
     {
         var input = _inputActions.Gameplay;
         var deltaTime = Time.deltaTime;
-
-        //get camera input and update it
-        var cameraInput = new CameraInput { Look = input.Look.ReadValue<Vector2>() };
-        playerCamera.UpdateRotation(cameraInput);
-
 
         //get character input and update it
         var crouchState = CrouchInput.None;
@@ -83,9 +86,14 @@ public class Player : MonoBehaviour
         var state = playerCharacter.GetState();
         var isSliding = state.Stance is Stance.Slide;
 
+        //get camera input and update it
+        var cameraInput = new CameraInput { Look = input.Look.ReadValue<Vector2>() };
+        playerCamera.UpdateRotation(cameraInput);
         playerCamera.UpdatePosition(cameraTarget);
+        playerCamera.UpdateCamera(deltaTime, state.Velocity);
         cameraSpring.UpdateSpring(deltaTime, cameraTarget.up);
         cameraLean.UpdateLean(deltaTime, isSliding, state.Acceleration, cameraTarget.up);
+        cameraVignette.UpdateVignette(deltaTime, state.Velocity);
 
         weaponSystem.UpdateInput();
         weaponHolder.UpdateWeapon();

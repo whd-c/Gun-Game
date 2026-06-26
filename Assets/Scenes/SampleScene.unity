@@ -969,6 +969,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &949178609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 949178610}
+  - component: {fileID: 949178611}
+  m_Layer: 0
+  m_Name: Vignette
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &949178610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949178609}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1770492338}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &949178611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949178609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 667ca17afd829e448bb5fa6575955f5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraVignette
+  minVignette: 0.2
+  maxVignette: 0.4
+  velocityPeak: 75
+  vignetteResponse: 10
 --- !u!1 &1165344596
 GameObject:
   m_ObjectHideFlags: 0
@@ -1070,6 +1118,8 @@ MonoBehaviour:
   playerCamera: {fileID: 1770492339}
   cameraSpring: {fileID: 1165344597}
   cameraLean: {fileID: 694903888}
+  cameraVignette: {fileID: 949178611}
+  volume: {fileID: 832575518}
   weaponSystem: {fileID: 636040499}
   weaponHolder: {fileID: 2001622706}
 --- !u!1 &1613070250
@@ -1135,6 +1185,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1165344598}
+  - {fileID: 949178610}
   m_Father: {fileID: 1201856916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1770492339
@@ -1149,8 +1200,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3a48a2340b3a0443aa1a3c97db82b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
+  mainCamera: {fileID: 330585545}
   sensitivity: 0.1
   clampedPitch: 85
+  minFieldOfView: 60
+  maxFieldOfView: 120
+  velocityPeak: 50
+  fieldOfViewResponse: 3
 --- !u!1 &1912520203
 GameObject:
   m_ObjectHideFlags: 0
