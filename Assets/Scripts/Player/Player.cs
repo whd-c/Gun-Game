@@ -1,12 +1,17 @@
 using UnityEngine;
 
-
 public class Player : MonoBehaviour
 {
     [SerializeField] private PlayerCharacter playerCharacter;
+
+    [Space]
     [SerializeField] private PlayerCamera playerCamera;
     [SerializeField] private CameraSpring cameraSpring;
     [SerializeField] private CameraLean cameraLean;
+
+    [Space]
+    [SerializeField] private WeaponSystem weaponSystem;
+    [SerializeField] private WeaponHolder weaponHolder;
 
     private PlayerInputActions _inputActions;
     void Start()
@@ -17,9 +22,13 @@ public class Player : MonoBehaviour
         _inputActions.Enable();
 
         playerCharacter.Initialize();
+
         playerCamera.Initialize(playerCharacter.GetCameraTarget());
         cameraSpring.Initialize();
         cameraLean.Initialize();
+
+        weaponSystem.Initialize();
+        weaponHolder.Initialize();
     }
 
     void OnDestroy()
@@ -77,5 +86,8 @@ public class Player : MonoBehaviour
         playerCamera.UpdatePosition(cameraTarget);
         cameraSpring.UpdateSpring(deltaTime, cameraTarget.up);
         cameraLean.UpdateLean(deltaTime, isSliding, state.Acceleration, cameraTarget.up);
+
+        weaponSystem.UpdateInput();
+        weaponHolder.UpdateWeapon();
     }
 }

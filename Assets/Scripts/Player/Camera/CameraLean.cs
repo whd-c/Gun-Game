@@ -40,6 +40,6 @@ public class CameraLean : MonoBehaviour
 
         _smoothStrength = Mathf.Lerp(_smoothStrength, targetStrength, 1f - Mathf.Exp(-strengthResponse * deltaTime));
 
-        transform.rotation = Quaternion.AngleAxis(_dampedAcceleration.magnitude * targetStrength, leanAxis) * transform.rotation;
+        transform.rotation = Quaternion.AngleAxis(_dampedAcceleration.magnitude * _smoothStrength, leanAxis) * transform.rotation;
     }
 }

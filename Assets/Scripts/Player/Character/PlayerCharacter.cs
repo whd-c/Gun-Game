@@ -1,7 +1,6 @@
 using UnityEngine;
 using KinematicCharacterController;
 using System;
-using UnityEngine.TextCore.Text;
 
 public enum CrouchInput
 {
