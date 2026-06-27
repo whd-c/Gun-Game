@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
@@ -17,7 +18,6 @@ public class Player : MonoBehaviour
 
     [Space]
     [SerializeField] private WeaponSystem weaponSystem;
-    [SerializeField] private WeaponHolder weaponHolder;
 
     private PlayerInputActions _inputActions;
     void Start()
@@ -36,7 +36,6 @@ public class Player : MonoBehaviour
         cameraVignette.Initialize(volume.profile);
 
         weaponSystem.Initialize();
-        weaponHolder.Initialize();
     }
 
     void OnDestroy()
@@ -95,7 +94,30 @@ public class Player : MonoBehaviour
         cameraLean.UpdateLean(deltaTime, isSliding, state.Acceleration, cameraTarget.up);
         cameraVignette.UpdateVignette(deltaTime, state.Velocity);
 
-        weaponSystem.UpdateInput();
-        weaponHolder.UpdateWeapon();
+        // Getting 1 - 9 input for the weapon
+        // this is shit code, im sorry for pushing this to the repo
+        // swear im gonna refactor this
+
+        var choosenWeapon = -1;
+
+        if (Keyboard.current.anyKey.IsPressed())
+        {
+            for (int i = 1; i <= 9; i++)
+            {
+                var pressedKey = (Key)((int)Key.Digit1 + (i - 1));
+                if (Keyboard.current[pressedKey].IsPressed())
+                {
+                    choosenWeapon = i - 1;
+                    break;
+                }
+            }
+        }
+
+        var weaponInput = new WeaponInput
+        {
+            ChoosenWeapon = choosenWeapon
+        };
+        weaponSystem.UpdateInput(weaponInput);
+
     }
 }
