@@ -21,7 +21,8 @@ public class PlayerCamera : MonoBehaviour
     [Range(0f, 180f)]
     [SerializeField] private float maxFieldOfView = 90f;
 
-    [SerializeField] private float velocityPeak = 20f;
+    [SerializeField] private float velocityMin = 15f;
+    [SerializeField] private float velocityPeak = 60f;
     [SerializeField] private float fieldOfViewResponse = 5f;
     private Vector3 _eulerAngles;
 
@@ -43,9 +44,12 @@ public class PlayerCamera : MonoBehaviour
         transform.position = target.position;
     }
 
-    public void UpdateCamera(float deltaTime, Vector3 velocity)
+    public void UpdateCamera(float deltaTime, Vector3 velocity, Vector3 up)
     {
-        var velocityRatio = Mathf.InverseLerp(0, velocityPeak, velocity.magnitude);
+        //get rid of vertical movement
+        var planarVelocity = Vector3.ProjectOnPlane(velocity, up);
+
+        var velocityRatio = Mathf.InverseLerp(velocityMin, velocityPeak, planarVelocity.magnitude);
         var targetFieldOfView = Mathf.Lerp(minFieldOfView, maxFieldOfView, velocityRatio);
 
         mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, targetFieldOfView, 1f - Mathf.Exp(-fieldOfViewResponse * deltaTime));

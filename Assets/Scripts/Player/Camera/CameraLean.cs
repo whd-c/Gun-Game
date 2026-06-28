@@ -8,6 +8,7 @@ public class CameraLean : MonoBehaviour
     [Space]
     [SerializeField] private float walkStrength = 0.075f;
     [SerializeField] private float slideStrength = 0.25f;
+    [SerializeField] private float jumpStrength = 0.2f;
     [SerializeField] private float strengthResponse = 5f;
     private Vector3 _dampedAcceleration;
     private Vector3 _dampedAccelerationVel;
@@ -18,9 +19,9 @@ public class CameraLean : MonoBehaviour
         _smoothStrength = walkStrength;
     }
 
-    public void UpdateLean(float deltaTime, bool sliding, Vector3 acceleration, Vector3 up)
+    public void UpdateLean(float deltaTime, CharacterState state, Vector3 up)
     {
-        var planarAcceleration = Vector3.ProjectOnPlane(acceleration, up);
+        var planarAcceleration = Vector3.ProjectOnPlane(state.Acceleration, up);
         var damping = planarAcceleration.magnitude > _dampedAcceleration.magnitude
         ? attackDamping : decayDamping;
 
@@ -36,7 +37,19 @@ public class CameraLean : MonoBehaviour
         var leanAxis = Vector3.Cross(_dampedAcceleration.normalized, up).normalized;
         transform.localRotation = Quaternion.identity;
 
-        var targetStrength = sliding ? slideStrength : walkStrength;
+        var sliding = state.Stance is Stance.Slide;
+        var jumping = !state.Grounded;
+
+        var targetStrength = walkStrength;
+
+        if (sliding)
+        {
+            targetStrength = slideStrength;
+        }
+        else if (jumping)
+        {
+            targetStrength = jumpStrength;
+        }
 
         _smoothStrength = Mathf.Lerp(_smoothStrength, targetStrength, 1f - Mathf.Exp(-strengthResponse * deltaTime));
 

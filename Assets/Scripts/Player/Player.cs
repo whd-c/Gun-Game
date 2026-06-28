@@ -83,15 +83,14 @@ public class Player : MonoBehaviour
 
         var cameraTarget = playerCharacter.GetCameraTarget();
         var state = playerCharacter.GetState();
-        var isSliding = state.Stance is Stance.Slide;
 
         //get camera input and update it
         var cameraInput = new CameraInput { Look = input.Look.ReadValue<Vector2>() };
         playerCamera.UpdateRotation(cameraInput);
         playerCamera.UpdatePosition(cameraTarget);
-        playerCamera.UpdateCamera(deltaTime, state.Velocity);
+        playerCamera.UpdateCamera(deltaTime, state.Velocity, cameraTarget.up);
         cameraSpring.UpdateSpring(deltaTime, cameraTarget.up);
-        cameraLean.UpdateLean(deltaTime, isSliding, state.Acceleration, cameraTarget.up);
+        cameraLean.UpdateLean(deltaTime, state, cameraTarget.up);
         cameraVignette.UpdateVignette(deltaTime, state.Velocity);
 
         // Getting 1 - 9 input for the weapon
