@@ -15,4 +15,7 @@ MonoBehaviour:
   weaponName: Gun
   fireRate: 0.5
   baseDamage: 10
-  drawTime: 0.5
+  maxAmmo: 15
+  bulletSpeed: 20
+  drawTime: 0.3
+  bulletPrefab: {fileID: 5210916672627990608, guid: 7e2569aaf8cd4f1459e2696d9ca562bf, type: 3}

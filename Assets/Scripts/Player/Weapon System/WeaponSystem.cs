@@ -4,34 +4,53 @@ using UnityEngine;
 public struct WeaponInput
 {
     public int ChoosenWeapon;
+    public bool Shoot;
 }
 
 public class WeaponSystem : MonoBehaviour
 {
-    [SerializeField] private List<BaseWeapon> availableWeapons;
+    [SerializeField] private List<BaseWeapon> weaponPrefabs;
     [SerializeField] private WeaponHolder weaponHolder;
 
-    private int _requestedWeaponIndex;
-    private int _currentWeaponIndex;
+    private List<BaseWeapon> _spawnedWeapons = new();
+    private int _requestedWeaponIndex = -1;
+    private bool _requestedToShoot = false;
+    private int _currentWeaponIndex = -1;
 
     public void Initialize()
     {
-        _requestedWeaponIndex = 0;
-        weaponHolder.SetWeapon(availableWeapons[_requestedWeaponIndex]);
+        foreach (var prefab in weaponPrefabs)
+        {
+            BaseWeapon spawnedWeapon = Instantiate(prefab, weaponHolder.transform);
+            spawnedWeapon.gameObject.SetActive(false);
+            spawnedWeapon.Initialize();
+            _spawnedWeapons.Add(spawnedWeapon);
+        }
+
+        EquipWeapon(0);
     }
 
     public void UpdateInput(WeaponInput weaponInput)
     {
         _requestedWeaponIndex = weaponInput.ChoosenWeapon;
+        _requestedToShoot = weaponInput.Shoot;
+        if (_requestedToShoot)
+        {
+            _spawnedWeapons[_currentWeaponIndex].TryToShoot();
+        }
         EquipWeapon(_requestedWeaponIndex);
+    }
+
+    public void UpdateWeapons(float deltaTime)
+    {
+        _spawnedWeapons[_currentWeaponIndex].UpdateWeapon(deltaTime);
     }
 
     public void EquipWeapon(int index)
     {
-        if (index < 0 || index >= availableWeapons.Count || index == _currentWeaponIndex) return;
+        if (index < 0 || index >= _spawnedWeapons.Count || index == _currentWeaponIndex) return;
 
-        var choosenWeapon = availableWeapons[index];
         _currentWeaponIndex = index;
-        weaponHolder.SetWeapon(choosenWeapon);
+        weaponHolder.SetWeapon(_spawnedWeapons[_currentWeaponIndex]);
     }
 }
