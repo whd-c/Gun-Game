@@ -1,21 +1,25 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class BaseWeapon : MonoBehaviour
 {
     public WeaponData weaponData;
-
+    public int currentAmmo;
+    public bool reloading;
     [SerializeField] protected Transform muzzle;
-    protected int _currentAmmo;
     private float _timeToFire;
     private float _drawingTime;
 
+
     public void Initialize()
     {
-        _currentAmmo = weaponData.maxAmmo;
+        reloading = false;
+        currentAmmo = weaponData.maxAmmo;
     }
 
     public void Switch()
     {
+        reloading = false;
         _timeToFire = 0f;
         _drawingTime = weaponData.drawTime;
     }
@@ -30,13 +34,21 @@ public abstract class BaseWeapon : MonoBehaviour
 
     public void TryToShoot()
     {
-        var canFire = _timeToFire <= 0f && _drawingTime <= 0f;
-        if (canFire && _currentAmmo > 0)
+        var canFire = _timeToFire <= 0f && _drawingTime <= 0f && !reloading;
+        if (canFire && currentAmmo > 0)
         {
             _timeToFire = weaponData.fireRate;
             Shoot();
-            _currentAmmo--;
+            currentAmmo--;
         }
+    }
+
+    public IEnumerator Reloading()
+    {
+        reloading = true;
+        yield return new WaitForSeconds(weaponData.reloadTime);
+        currentAmmo = weaponData.maxAmmo;
+        reloading = false;
     }
 
     protected abstract void Shoot();

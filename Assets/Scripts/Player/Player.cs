@@ -115,7 +115,8 @@ public class Player : MonoBehaviour
         var weaponInput = new WeaponInput
         {
             ChoosenWeapon = choosenWeapon,
-            Shoot = input.Shoot.WasPressedThisFrame()
+            Shoot = input.Shoot.WasPressedThisFrame(),
+            Reload = input.Reload.WasPressedThisFrame()
         };
         weaponSystem.UpdateInput(weaponInput);
         weaponSystem.UpdateWeapons(deltaTime);

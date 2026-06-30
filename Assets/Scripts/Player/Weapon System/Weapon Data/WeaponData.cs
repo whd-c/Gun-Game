@@ -9,5 +9,6 @@ public class WeaponData : ScriptableObject
     public int maxAmmo;
     public float bulletSpeed;
     public float drawTime;
+    public float reloadTime;
     public GameObject bulletPrefab;
 }

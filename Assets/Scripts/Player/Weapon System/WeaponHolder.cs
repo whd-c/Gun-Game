@@ -2,21 +2,34 @@ using UnityEngine;
 
 public class WeaponHolder : MonoBehaviour
 {
-    private BaseWeapon _currentWeapon;
+    public BaseWeapon currentWeapon;
+    private Coroutine _reloadingCoroutine;
 
     public void SetWeapon(BaseWeapon weapon)
     {
-        if (_currentWeapon != null)
+        if (currentWeapon != null)
         {
-            _currentWeapon.gameObject.SetActive(false);
+            currentWeapon.gameObject.SetActive(false);
+            if (_reloadingCoroutine != null)
+            {
+                StopCoroutine(_reloadingCoroutine);
+                _reloadingCoroutine = null;
+            }
+
         }
 
-        _currentWeapon = weapon;
-        _currentWeapon.Switch();
+        currentWeapon = weapon;
 
-        if (_currentWeapon != null)
+        if (currentWeapon != null)
         {
-            _currentWeapon.gameObject.SetActive(true);
+            currentWeapon.Switch();
+            currentWeapon.gameObject.SetActive(true);
         }
+    }
+
+    public void Reload()
+    {
+        if (currentWeapon.currentAmmo < currentWeapon.weaponData.maxAmmo)
+            _reloadingCoroutine = StartCoroutine(currentWeapon.Reloading());
     }
 }

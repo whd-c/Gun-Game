@@ -5,6 +5,7 @@ public struct WeaponInput
 {
     public int ChoosenWeapon;
     public bool Shoot;
+    public bool Reload;
 }
 
 public class WeaponSystem : MonoBehaviour
@@ -15,6 +16,7 @@ public class WeaponSystem : MonoBehaviour
     private List<BaseWeapon> _spawnedWeapons = new();
     private int _requestedWeaponIndex = -1;
     private bool _requestedToShoot = false;
+    private bool _requestedToReload = false;
     private int _currentWeaponIndex = -1;
 
     public void Initialize()
@@ -34,9 +36,15 @@ public class WeaponSystem : MonoBehaviour
     {
         _requestedWeaponIndex = weaponInput.ChoosenWeapon;
         _requestedToShoot = weaponInput.Shoot;
+        _requestedToReload = weaponInput.Reload;
+
         if (_requestedToShoot)
         {
             _spawnedWeapons[_currentWeaponIndex].TryToShoot();
+        }
+        else if (_requestedToReload)
+        {
+            weaponHolder.Reload();
         }
         EquipWeapon(_requestedWeaponIndex);
     }
