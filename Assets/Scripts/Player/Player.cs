@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
         {
             ChoosenWeapon = choosenWeapon,
             Shoot = input.Shoot.WasPressedThisFrame(),
+            AutomaticShoot = input.Shoot.IsPressed(),
             Reload = input.Reload.WasPressedThisFrame()
         };
         weaponSystem.UpdateInput(weaponInput);

@@ -29,7 +29,7 @@ public class WeaponHolder : MonoBehaviour
 
     public void Reload()
     {
-        if (currentWeapon.currentAmmo < currentWeapon.weaponData.maxAmmo)
+        if ((currentWeapon.currentAmmo < currentWeapon.weaponData.maxAmmo) && _reloadingCoroutine == null)
             _reloadingCoroutine = StartCoroutine(currentWeapon.Reloading());
     }
 }

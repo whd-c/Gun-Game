@@ -5,6 +5,7 @@ public struct WeaponInput
 {
     public int ChoosenWeapon;
     public bool Shoot;
+    public bool AutomaticShoot;
     public bool Reload;
 }
 
@@ -16,6 +17,7 @@ public class WeaponSystem : MonoBehaviour
     private List<BaseWeapon> _spawnedWeapons = new();
     private int _requestedWeaponIndex = -1;
     private bool _requestedToShoot = false;
+    private bool _requestedToAutomaticShoot = false;
     private bool _requestedToReload = false;
     private int _currentWeaponIndex = -1;
 
@@ -37,8 +39,10 @@ public class WeaponSystem : MonoBehaviour
         _requestedWeaponIndex = weaponInput.ChoosenWeapon;
         _requestedToShoot = weaponInput.Shoot;
         _requestedToReload = weaponInput.Reload;
+        _requestedToAutomaticShoot = weaponInput.AutomaticShoot;
+        var isAutomatic = _spawnedWeapons[_currentWeaponIndex].weaponData.isAutomatic;
 
-        if (_requestedToShoot)
+        if (_requestedToShoot || (_requestedToAutomaticShoot && isAutomatic))
         {
             _spawnedWeapons[_currentWeaponIndex].TryToShoot();
         }

@@ -4,9 +4,13 @@ public class Bullet : MonoBehaviour
 {
     private float _damage;
     private float _bulletSpeed;
-    public void Initialize(float bulletSpeed, float damage, Transform muzzle)
+    public void Initialize(float bulletSpeed, float damage, float bulletSpread, Transform muzzle)
     {
-        transform.SetPositionAndRotation(muzzle.position, muzzle.rotation);
+        transform.position = muzzle.position;
+
+        var circularSpread = Random.insideUnitCircle * bulletSpread;
+        transform.rotation = muzzle.rotation * Quaternion.Euler(circularSpread.x, circularSpread.y, 0f);
+
         _damage = damage;
         _bulletSpeed = bulletSpeed;
         Destroy(transform.gameObject, 5f);

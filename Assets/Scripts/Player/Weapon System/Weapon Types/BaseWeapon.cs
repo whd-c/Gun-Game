@@ -39,7 +39,6 @@ public abstract class BaseWeapon : MonoBehaviour
         {
             _timeToFire = weaponData.fireRate;
             Shoot();
-            currentAmmo--;
         }
     }
 
