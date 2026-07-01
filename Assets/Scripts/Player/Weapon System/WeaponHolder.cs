@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WeaponHolder : MonoBehaviour
 {
-    public BaseWeapon currentWeapon;
+    [HideInInspector] public BaseWeapon currentWeapon;
     private Coroutine _reloadingCoroutine;
 
     public void SetWeapon(BaseWeapon weapon)
@@ -29,7 +29,11 @@ public class WeaponHolder : MonoBehaviour
 
     public void Reload()
     {
-        if ((currentWeapon.currentAmmo < currentWeapon.weaponData.maxAmmo) && _reloadingCoroutine == null)
+        if ((currentWeapon.currentAmmo < currentWeapon.weaponData.maxAmmo) && !currentWeapon.reloading)
+        {
             _reloadingCoroutine = StartCoroutine(currentWeapon.Reloading());
+
+        }
+
     }
 }

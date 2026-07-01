@@ -5,7 +5,7 @@ public abstract class BaseWeapon : MonoBehaviour
 {
     public WeaponData weaponData;
     public int currentAmmo;
-    public bool reloading;
+    [HideInInspector] public bool reloading;
     [SerializeField] protected Transform muzzle;
     private float _timeToFire;
     private float _drawingTime;

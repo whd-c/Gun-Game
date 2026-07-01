@@ -16,7 +16,7 @@ MonoBehaviour:
   fireRate: 0.005
   isAutomatic: 1
   bulletsPerShot: 5
-  baseDamage: 100
+  baseDamage: 0.05
   maxAmmo: 100000
   bulletSpeed: 50
   bulletSpread: 10
