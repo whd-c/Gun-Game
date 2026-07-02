@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private WeaponSystem weaponSystem;
 
+    [Space]
+    [SerializeField] private PlayerCrosshair playerCrosshair;
+
     private PlayerInputActions _inputActions;
     void Start()
     {
@@ -35,7 +38,9 @@ public class Player : MonoBehaviour
 
         cameraVignette.Initialize(volume.profile);
 
-        weaponSystem.Initialize();
+        weaponSystem.Initialize(playerCrosshair);
+
+        playerCrosshair.Initialize();
     }
 
     void OnDestroy()
@@ -122,5 +127,6 @@ public class Player : MonoBehaviour
         weaponSystem.UpdateInput(weaponInput);
         weaponSystem.UpdateWeapons(deltaTime);
 
+        playerCrosshair.UpdateCrosshair(deltaTime);
     }
 }

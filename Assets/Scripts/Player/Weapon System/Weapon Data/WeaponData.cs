@@ -13,5 +13,6 @@ public class WeaponData : ScriptableObject
     public float bulletSpread;
     public float drawTime;
     public float reloadTime;
+    public float crosshairGrowth;
     public GameObject bulletPrefab;
 }

@@ -9,22 +9,22 @@ public class Enemy : MonoBehaviour, IDamageable
     [Space]
     [SerializeField] private float respawnTime = 2f;
     [SerializeField] private float maxHealth = 100f;
-    private float _health;
+    public float health;
     private Coroutine _changeColorCoroutine;
 
     public void Start()
     {
         enemyRenderer.material.color = Color.green;
-        _health = maxHealth;
+        health = maxHealth;
     }
 
     public void TakeDamage(float amount)
     {
-        _health -= amount;
+        health -= amount;
         if (_changeColorCoroutine != null)
             StopCoroutine(_changeColorCoroutine);
         _changeColorCoroutine = StartCoroutine(ChangeColor());
-        if (_health <= 0f)
+        if (health <= 0f)
             StartCoroutine(Deactivate());
     }
 
@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(respawnTime);
         enemyRenderer.enabled = true;
         enemyCollider.enabled = true;
-        _health = maxHealth;
+        health = maxHealth;
     }
 
 }

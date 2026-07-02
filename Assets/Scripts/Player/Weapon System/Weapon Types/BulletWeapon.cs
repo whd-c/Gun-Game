@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BulletWeapon : BaseWeapon
 {
+    [SerializeField] private bool enableBulletSparks;
     protected override void Shoot()
     {
         for (int i = 0; i < weaponData.bulletsPerShot; i++)
@@ -13,7 +14,7 @@ public class BulletWeapon : BaseWeapon
             GameObject bulletObj = Instantiate(weaponData.bulletPrefab, muzzle.position, muzzle.rotation);
             if (bulletObj.TryGetComponent<Bullet>(out var bullet))
             {
-                bullet.Initialize(weaponData.bulletSpeed, weaponData.baseDamage, weaponData.bulletSpread, muzzle);
+                bullet.Initialize(weaponData.bulletSpeed, weaponData.baseDamage, weaponData.bulletSpread, muzzle, enableBulletSparks);
             }
             else
             {

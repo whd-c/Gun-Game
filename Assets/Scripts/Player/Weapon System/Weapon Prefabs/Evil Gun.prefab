@@ -137,7 +137,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletWeapon
   weaponData: {fileID: 11400000, guid: b3f091549b9177a4c9f7cc2eb4573b78, type: 2}
+  currentAmmo: 0
+  reloading: 0
   muzzle: {fileID: 6896271623664363022}
+  enableBulletSparks: 1
 --- !u!1 &6385304384166739632
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField] private ParticleSystem bulletSparks;
     private float _damage;
     private float _bulletSpeed;
-    public void Initialize(float bulletSpeed, float damage, float bulletSpread, Transform muzzle)
+    public void Initialize(float bulletSpeed, float damage, float bulletSpread, Transform muzzle, bool enableSparks = true)
     {
         transform.position = muzzle.position;
 
@@ -13,6 +14,9 @@ public class Bullet : MonoBehaviour
 
         _damage = damage;
         _bulletSpeed = bulletSpeed;
+
+        bulletSparks.gameObject.SetActive(enableSparks);
+
         Destroy(transform.gameObject, 5f);
     }
 

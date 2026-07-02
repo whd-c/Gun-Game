@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Evil Gun
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Evil Gun
-  fireRate: 0.005
+  fireRate: 0.05
   isAutomatic: 1
-  bulletsPerShot: 5
-  baseDamage: 0.05
+  bulletsPerShot: 3
+  baseDamage: 0.4
   maxAmmo: 100000
   bulletSpeed: 50
-  bulletSpread: 10
-  drawTime: 0
-  reloadTime: 10
+  bulletSpread: 8
+  drawTime: 0.3
+  reloadTime: 2
+  crosshairGrowth: 0.15
   bulletPrefab: {fileID: 5210916672627990608, guid: 7e2569aaf8cd4f1459e2696d9ca562bf, type: 3}

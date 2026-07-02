@@ -9,10 +9,12 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected Transform muzzle;
     private float _timeToFire;
     private float _drawingTime;
+    private PlayerCrosshair _playerCrosshair;
 
 
-    public void Initialize()
+    public void Initialize(PlayerCrosshair playerCrosshair)
     {
+        _playerCrosshair = playerCrosshair;
         reloading = false;
         currentAmmo = weaponData.maxAmmo;
     }
@@ -39,6 +41,7 @@ public abstract class BaseWeapon : MonoBehaviour
         {
             _timeToFire = weaponData.fireRate;
             Shoot();
+            _playerCrosshair.Grow(weaponData.crosshairGrowth);
         }
     }
 

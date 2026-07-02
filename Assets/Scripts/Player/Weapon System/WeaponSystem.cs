@@ -21,13 +21,13 @@ public class WeaponSystem : MonoBehaviour
     private bool _requestedToReload = false;
     private int _currentWeaponIndex = -1;
 
-    public void Initialize()
+    public void Initialize(PlayerCrosshair playerCrosshair)
     {
         foreach (var prefab in weaponPrefabs)
         {
             BaseWeapon spawnedWeapon = Instantiate(prefab, weaponHolder.transform);
             spawnedWeapon.gameObject.SetActive(false);
-            spawnedWeapon.Initialize();
+            spawnedWeapon.Initialize(playerCrosshair);
             _spawnedWeapons.Add(spawnedWeapon);
         }
 
